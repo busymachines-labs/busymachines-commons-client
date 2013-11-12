@@ -4,13 +4,11 @@ angular.module("bmComponents").directive("bmNotification", ["$timeout", "bmMessa
         return {
             restrict: "A",
             scope: {
-                "template": "@bmNotificationTemplate"
+                "template": "=bmNotificationTemplate"
             },
             replace: true,
             template: "<div ng-include src='template'></div>",
             controller: ["$scope", "$element", function($scope) {
-
-                $scope.notification = {};
 
                 $scope.dismiss = function ($event) {
                     $event.preventDefault();
@@ -29,7 +27,6 @@ angular.module("bmComponents").directive("bmNotification", ["$timeout", "bmMessa
                 });
             }],
             link: function (scope, element, attrs, controller) {
-
             }
         }
     }

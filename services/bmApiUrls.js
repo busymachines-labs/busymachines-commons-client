@@ -7,6 +7,7 @@ angular.module("bmComponents").provider("bmApiUrls", function () {
     this.port = "";
     this.secure = false;
     this.urls = {};
+    this.urlGenerator = null;
 
     this.$get = function () {
         return {
@@ -15,6 +16,7 @@ angular.module("bmComponents").provider("bmApiUrls", function () {
             port: that.port,
             secure: that.secure,
             urls: that.urls,
+            urlGenerator: that.urlGenerator,
             getPort: function (escape) {
                 if (this.port) {
                     return escape ? ":" + this.port + "\\:" + this.port : ":" + this.port;
@@ -33,11 +35,17 @@ angular.module("bmComponents").provider("bmApiUrls", function () {
                     url = url.apply(null, argsArray);
                 }
 
-                return (this.secure ? "https://" : "http://") +
-                    this.hostname +
-                    this.getPort(escapePort) +
-                    "/v" + this.apiVersion +
-                    url;
+                if (angular.isFunction(this.urlGenerator)) {
+                    return (this.secure ? "https://" : "http://") +
+                        this.urlGenerator(this.hostname, this.getPort(escapePort), this.apiVersion) +
+                        url;
+                } else {
+                    return (this.secure ? "https://" : "http://") +
+                        this.hostname +
+                        this.getPort(escapePort) +
+                        "/v" + this.apiVersion +
+                        url;
+                }
             }
         }
     }

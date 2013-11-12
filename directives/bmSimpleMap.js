@@ -1,5 +1,5 @@
-angular.module("bmComponents").directive("bmSimpleMap", ["$timeout",
-    function ($timeout) {
+angular.module("bmComponents").directive("bmSimpleMap", ["$timeout", "$parse",
+    function ($timeout, $parse) {
         return {
             restrict: "A",
             link: function(scope, element, attrs) {
@@ -13,7 +13,8 @@ angular.module("bmComponents").directive("bmSimpleMap", ["$timeout",
                     },
                     map = new google.maps.Map(element.get(0), options),
                     coords,
-                    marker;
+                    marker,
+                    timeoutPromise;
 
                 scope.$watch("visible", function(value) {
                     if (value) {
@@ -39,8 +40,8 @@ angular.module("bmComponents").directive("bmSimpleMap", ["$timeout",
                 });
 
                 scope.$watch(attrs.mapMarker, function (markerData) {
-                    if (markerData && markerData.lat && markerData.lon) {
-                        coords = new google.maps.LatLng(markerData.lat, markerData.lon);
+                    if (markerData && markerData.latitude && markerData.longitude) {
+                        coords = new google.maps.LatLng(markerData.latitude, markerData.longitude);
                         if (!marker) {
                             marker = new google.maps.Marker({
                                 position: coords,
@@ -50,6 +51,46 @@ angular.module("bmComponents").directive("bmSimpleMap", ["$timeout",
                             marker.setPosition(coords);
                         }
                         map.setCenter(coords);
+                    }
+                }, true);
+
+                scope.$watch(attrs.geolocationData, function (newValue, oldValue) {
+
+                    var addressObj,
+                        geocoder = new google.maps.Geocoder(),
+                        locationLatitudeSetter = $parse(attrs.latitude).assign,
+                        locationLongitudeSetter = $parse(attrs.longitude).assign;
+
+                    if (newValue && oldValue && (newValue.street !== oldValue.street || newValue.houseNumber !== oldValue.houseNumber
+                        || newValue.zipCode !== oldValue.zipCode || newValue.city !== oldValue.city)) {
+                        $timeout.cancel(timeoutPromise);
+                        if (newValue && newValue.street && newValue.houseNumber && newValue.zipCode && newValue.city) {
+                            timeoutPromise = $timeout(function () {
+                                addressObj = {
+                                    address: newValue.street + " " + newValue.houseNumber + " " +
+                                        (newValue.houseNumberSuffix ? newValue.houseNumberSuffix : "") +
+                                        newValue.zipCode + " " + newValue.city
+                                };
+                                geocoder.geocode(addressObj, function(results, status) {
+                                    if (status == google.maps.GeocoderStatus.OK) {
+                                        scope.$apply(function () {
+                                            locationLatitudeSetter(scope, results[0].geometry.location.lat());
+                                            locationLongitudeSetter(scope, results[0].geometry.location.lng());
+                                            coords = new google.maps.LatLng(results[0].geometry.location.lat(), results[0].geometry.location.lng());
+                                            if (!marker) {
+                                                marker = new google.maps.Marker({
+                                                    position: coords,
+                                                    map: map
+                                                });
+                                            } else {
+                                                marker.setPosition(coords);
+                                            }
+                                            map.setCenter(coords);
+                                        });
+                                    }
+                                });
+                            }, 1000);
+                        }
                     }
                 }, true);
             }
