@@ -5,11 +5,28 @@ angular.module("bmComponents").directive("bmInputSync", ["$timeout",
             restrict : "A",
             require: "?ngModel",
             link : function(scope, element, attrs, ngModel) {
-                $timeout(function() {
-                    if (ngModel.$pristine && element.val().length > 0) {
-                        ngModel.$setViewValue(element.val());
-                    }
-                }, 500);
+
+                var timer;
+
+                function startTimer() {
+                    timer = $timeout(function () {
+                        var value = element.val();
+                        if (value && ngModel.$viewValue !== value) {
+                            ngModel.$setViewValue(value);
+                        }
+                        startTimer();
+                    }, 500);
+                }
+
+                scope.$on("$destroy", function () {
+                    $timeout.cancel(timer);
+                });
+
+                scope.$on("bmLoginRequired", startTimer);
+
+                scope.$on("bmLoginConfirmed", function () {
+                    $timeout.cancel(timer);
+                });
             }
         }
     }
