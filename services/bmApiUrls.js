@@ -36,11 +36,11 @@ angular.module("bmComponents").provider("bmApiUrls", function () {
                 }
 
                 if (angular.isFunction(this.urlGenerator)) {
-                    return (this.secure ? "https://" : "http://") +
+                    return (this.hostname ? this.secure ? "https://" : "http://" : "") +
                         this.urlGenerator(this.hostname, this.getPort(escapePort), this.apiVersion) +
                         url;
                 } else {
-                    return (this.secure ? "https://" : "http://") +
+                    return (this.hostname ? this.secure ? "https://" : "http://" : "") +
                         this.hostname +
                         this.getPort(escapePort) +
                         "/v" + this.apiVersion +

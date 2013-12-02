@@ -19,6 +19,7 @@ angular.module("bmComponents").provider("bmLazyLoader", function () {
 
         return this.searchMethod(params).then(function (data) {
             instance.parseData(data, true);
+            return data;
         });
     }
 
@@ -47,6 +48,7 @@ angular.module("bmComponents").provider("bmLazyLoader", function () {
 
         return this.searchMethod(params).then(function (data) {
             instance.parseData(data, true);
+            return data;
         });
     };
 

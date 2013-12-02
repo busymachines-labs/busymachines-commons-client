@@ -11,8 +11,7 @@ angular.module("bmComponents").directive("bmDateParser", function () {
                 if (modelFormat) {
                     return moment(text, viewFormat).format(modelFormat);
                 } else {
-//                    return moment(text, viewFormat).zone("+0100").toDate().toISOString();
-                    return moment(text, viewFormat).format("YYYY-MM-DDTHH:mm:ss.SSS") + "Z";
+                    return moment(text, viewFormat).toISOString();
                 }
             });
 

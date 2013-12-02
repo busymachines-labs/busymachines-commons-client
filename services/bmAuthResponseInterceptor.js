@@ -2,7 +2,7 @@ angular.module("bmComponents").factory("bmAuthResponseInterceptor", ["$q", "$roo
     function($q, $rootScope, bmAuthRequestBuffer) {
         return {
             "responseError": function(rejection) {
-                if (rejection.status === 403 && rejection.config.url.indexOf("/authentication") < 0) {
+                if (rejection.status === 401 && rejection.config.url.indexOf("/authentication") < 0) {
                     var deferred = $q.defer();
                     bmAuthRequestBuffer.pushToBuffer(rejection.config, deferred);
                     $rootScope.$broadcast("bmLoginRequired");
