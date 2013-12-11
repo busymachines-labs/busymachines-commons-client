@@ -4,6 +4,7 @@ angular.module("bmComponents").provider("bmAuthRequestBuffer",
         var that = this;
 
         this.tokenHeaderName = "Auth-Token";
+        this.unauthorizedStatusCode = 401;
 
         this.$get = ["$rootScope", "$injector",
             function ($rootScope, $injector) {
