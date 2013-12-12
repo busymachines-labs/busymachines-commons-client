@@ -220,7 +220,30 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
             }
         }
     }
-]);;angular.module("bmComponents").directive("bmSimpleMap", ["$timeout", "$parse",
+]);;angular.module("bmComponents").directive("bmRadioButtonGroup", [
+    function () {
+        return {
+            replace: false,
+            restrict: "A",
+            template: "<div ng-include src='template'></div>",
+            scope: {
+                template: "=",
+                radioValues: "=",
+                changeValue: "&",
+                radioValue: "="
+            },
+            link: function (scope, element, attrs) {
+                scope.click = function (index) {
+                    scope.radioValue = scope.radioValues[index].value;
+                    scope.changeValue({
+                        type: scope.radioValue
+                    });
+                };
+            }
+        }
+    }
+]);
+;angular.module("bmComponents").directive("bmSimpleMap", ["$timeout", "$parse",
     function ($timeout, $parse) {
         return {
             restrict: "A",
