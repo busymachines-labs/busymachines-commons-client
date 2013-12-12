@@ -37,7 +37,8 @@ angular.module("bmComponents").provider("bmAuthRequestBuffer",
                             config: config,
                             deferred: deferred
                         })
-                    }
+                    },
+                    unauthorizedStatusCode: that.unauthorizedStatusCode
                 }
             }
         ];
