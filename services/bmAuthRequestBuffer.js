@@ -28,6 +28,8 @@ angular.module("bmComponents").provider("bmAuthRequestBuffer",
                 }
 
                 return {
+                    unauthorizedStatusCode: that.unauthorizedStatusCode,
+                    tokenHeaderName: that.tokenHeaderName,
                     loginConfirmed: function() {
                         $rootScope.$broadcast("bmLoginConfirmed");
                         retryAll();
@@ -37,8 +39,7 @@ angular.module("bmComponents").provider("bmAuthRequestBuffer",
                             config: config,
                             deferred: deferred
                         })
-                    },
-                    unauthorizedStatusCode: that.unauthorizedStatusCode
+                    }
                 }
             }
         ];
