@@ -693,3 +693,8 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
         return (input + '').replace(/([^>\r\n]?)(\r\n|\n\r|\r|\n)/g, '$1' + breakTag + '$2');
     }
 });
+;angular.module("bmComponents").config(["bmApiUrlsProvider",
+    function (bmApiUrlsProvider) {
+        bmApiUrlsProvider.urls.userAuthentication = "/users/authentication";
+    }
+]);

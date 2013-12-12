@@ -13,7 +13,7 @@ module.exports = function (grunt) {
                     "directives/*.js",
                     "services/*.js",
                     "filters/*.js",
-                    "config.js"
+                    "config/config.js"
                 ],
                 dest: "<%= pkg.name %>.js"
             }
