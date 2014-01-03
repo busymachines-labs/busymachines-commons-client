@@ -1,6 +1,6 @@
 {
   "name": "busymachines-commons-client",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "homepage": "https://github.com/busymachines/busymachines-commons-client",
   "main": "bmComponents.js",
   "authors": [
@@ -11,6 +11,7 @@
     "javascript",
     "angularjs"
   ],
+  "main": "./bmComponents.js",
   "license": "Proprietary",
   "private": true,
   "ignore": [
