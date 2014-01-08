@@ -569,12 +569,12 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
         });
     }
 
-    LazyLoader.prototype.getMore = function () {
+    LazyLoader.prototype.getMore = function (howMany) {
         var params = this.getParams(),
-            instance = this;;
+            instance = this;
 
         params.from = this.destinationArray.length;
-        params.to = this.PAGE_SIZE;
+        params.to = howMany || this.PAGE_SIZE;
 
         if (this.destinationArray.length < this.totalCount) {
             return this.searchMethod(params).then(function (data) {
