@@ -579,6 +579,7 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
         if (this.destinationArray.length < this.totalCount) {
             return this.searchMethod(params).then(function (data) {
                 instance.parseData(data);
+                return data;
             });
         } else {
             return that.$q.when({});

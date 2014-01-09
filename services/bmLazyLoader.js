@@ -33,6 +33,7 @@ angular.module("bmComponents").provider("bmLazyLoader", function () {
         if (this.destinationArray.length < this.totalCount) {
             return this.searchMethod(params).then(function (data) {
                 instance.parseData(data);
+                return data;
             });
         } else {
             return that.$q.when({});
