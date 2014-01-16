@@ -624,7 +624,7 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
         this.totalCount = data.data.totalCount;
 
         resultPropName = keys.filter(function (prop) {
-            return prop !== "totalCount";
+            return prop !== "totalCount" && prop !== "facets";
         })[0];
 
         if (overwrite) {

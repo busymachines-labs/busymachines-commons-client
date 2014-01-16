@@ -1,6 +1,6 @@
 {
   "name": "bmComponents",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "devDependencies": {
     "grunt": "~0.4.1",
     "grunt-contrib-concat": "~0.3.0",
