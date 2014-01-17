@@ -28,7 +28,7 @@ angular.module("bmComponents").provider("bmLazyLoader", function () {
             instance = this;
 
         params.from = this.destinationArray.length;
-        params.to = this.destinationArray.length + (this.PAGE_SIZE || howMany);
+        params.to = this.destinationArray.length + (howMany || this.PAGE_SIZE);
 
         if (this.destinationArray.length < this.totalCount) {
             return this.searchMethod(params).then(function (data) {
