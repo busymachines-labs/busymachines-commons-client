@@ -564,7 +564,7 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
         params.size = this.PAGE_SIZE;
 
         return this.searchMethod(params).then(function (data) {
-            instance.parseData(data, true);
+            instance.parseData(data);
             return data;
         });
     }
@@ -573,7 +573,7 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
         var params = this.getParams(),
             instance = this;
 
-        params.from = this.destinationArray.length;
+        params.from = 0;
         params.to = this.destinationArray.length + (howMany || this.PAGE_SIZE);
 
         if (this.destinationArray.length < this.totalCount) {
@@ -594,7 +594,7 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
         params.size = this.destinationArray.length;
 
         return this.searchMethod(params).then(function (data) {
-            instance.parseData(data, true);
+            instance.parseData(data);
             return data;
         });
     };
@@ -617,7 +617,7 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
         return params;
     };
 
-    LazyLoader.prototype.parseData = function (data, overwrite) {
+    LazyLoader.prototype.parseData = function (data) {
         var keys = Object.keys(data.data),
             resultPropName;
 
@@ -627,10 +627,7 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
             return prop !== "totalCount" && prop !== "facets";
         })[0];
 
-        if (overwrite) {
-            this.destinationArray.length = 0;
-        }
-
+        this.destinationArray.length = 0;
         this.destinationArray.push.apply(this.destinationArray, data.data[resultPropName]);
     };
 
