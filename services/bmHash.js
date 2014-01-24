@@ -1,6 +1,24 @@
 angular.module("bmComponents").factory("bmHash", ["$location",
     function ($location) {
         return {
+            serializeObject: function (data) {
+                var i,
+                    resultArr = [];
+
+                for (i in data) {
+                    if (data.hasOwnProperty(i)) {
+                        if (angular.isArray(data[i])) {
+                            if (data[i].length) {
+                                resultArr.push(i + "=" + data[i].join(","));
+                            }
+                        } else if (data[i] !== undefined && data[i] !== null && data[i] !== "") {
+                            resultArr.push(i + "=" + data[i]);
+                        }
+                    }
+                }
+
+                return resultArr.join("&");
+            },
             getData: function () {
                 var dataArr = $location.hash().split("&"),
                     result = {};
@@ -15,24 +33,7 @@ angular.module("bmComponents").factory("bmHash", ["$location",
                 return result;
             },
             setData: function (data) {
-                var i,
-                    resultArr = [],
-                    result;
-
-                for (i in data) {
-                    if (data.hasOwnProperty(i)) {
-                        if (angular.isArray(data[i])) {
-                            if (data[i].length) {
-                                resultArr.push(i + "=" + data[i].join(","));
-                            }
-                        } else if (data[i] !== undefined && data[i] !== null && data[i] !== "") {
-                            resultArr.push(i + "=" + data[i]);
-                        }
-                    }
-                }
-
-                result = resultArr.join("&");
-                $location.hash(result);
+                $location.hash(this.serializeObject(data));
             }
         };
     }
