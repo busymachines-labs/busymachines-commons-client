@@ -19,16 +19,14 @@ angular.module("bmComponents").directive("bmNotification", ["$timeout", "bmMessa
 
                 $scope.$on("bm:newMessage", function ($e, data) {
                     var messages;
-                    if ($scope.notificationType) {
+                    if ($scope.notificationType && $scope.notificationType === data.type) {
                         messages = bmMessageQueue.getMessagesByType($scope.notificationType);
-                    } else {
-                        messages = bmMessageQueue.getMessages();
-                    }
-                    $scope.notification = messages[messages.length - 1];
-                    if ($scope.notification.timeout) {
-                        $timeout(function () {
-                            $scope.notification = {};
-                        }, $scope.notification.timeout);
+                        $scope.notification = messages[messages.length - 1];
+                        if ($scope.notification.timeout) {
+                            $timeout(function () {
+                                $scope.notification = {};
+                            }, $scope.notification.timeout);
+                        }
                     }
                 });
             }],
