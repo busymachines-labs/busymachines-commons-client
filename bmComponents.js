@@ -194,7 +194,8 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
         return {
             restrict: "A",
             scope: {
-                "template": "=bmNotificationTemplate"
+                "template": "=bmNotificationTemplate",
+                "notificationType": "@"
             },
             replace: true,
             template: "<div ng-include src='template'></div>",
@@ -206,8 +207,13 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
                     $scope.notification = {};
                 };
 
-                $scope.$on("bm:newMessage", function () {
-                    var messages = bmMessageQueue.getMessages();
+                $scope.$on("bm:newMessage", function ($e, data) {
+                    var messages;
+                    if ($scope.notificationType) {
+                        messages = bmMessageQueue.getMessagesByType($scope.notificationType);
+                    } else {
+                        messages = bmMessageQueue.getMessages();
+                    }
                     $scope.notification = messages[messages.length - 1];
                     if ($scope.notification.timeout) {
                         $timeout(function () {
@@ -652,10 +658,17 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
         getMessages: function () {
             return messages;
         },
+        getMessagesByType: function (type) {
+            return messages.filter(function (message) {
+                return type === message.type;
+            });
+        },
         newMessage: function (message) {
             message.timestamp = new Date();
             messages.push(message);
-            $rootScope.$broadcast("bm:newMessage");
+            $rootScope.$broadcast("bm:newMessage", {
+                type: message.type
+            });
         }
     }
 }]);;angular.module("bmComponents").factory("bmUsers", ["$http", "$location", "$rootScope", "bmApiUrls", "bmCookies", "bmAuthRequestBuffer",

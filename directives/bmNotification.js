@@ -4,7 +4,8 @@ angular.module("bmComponents").directive("bmNotification", ["$timeout", "bmMessa
         return {
             restrict: "A",
             scope: {
-                "template": "=bmNotificationTemplate"
+                "template": "=bmNotificationTemplate",
+                "notificationType": "@"
             },
             replace: true,
             template: "<div ng-include src='template'></div>",
@@ -16,8 +17,13 @@ angular.module("bmComponents").directive("bmNotification", ["$timeout", "bmMessa
                     $scope.notification = {};
                 };
 
-                $scope.$on("bm:newMessage", function () {
-                    var messages = bmMessageQueue.getMessages();
+                $scope.$on("bm:newMessage", function ($e, data) {
+                    var messages;
+                    if ($scope.notificationType) {
+                        messages = bmMessageQueue.getMessagesByType($scope.notificationType);
+                    } else {
+                        messages = bmMessageQueue.getMessages();
+                    }
                     $scope.notification = messages[messages.length - 1];
                     if ($scope.notification.timeout) {
                         $timeout(function () {
