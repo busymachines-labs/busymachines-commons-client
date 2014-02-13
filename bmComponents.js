@@ -296,6 +296,9 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
                                 position: coords,
                                 map: map
                             });
+                            if (markerData.icon) {
+                                marker.setIcon(markerData.icon);
+                            }
                         } else {
                             marker.setPosition(coords);
                         }
@@ -331,6 +334,9 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
                                                     position: coords,
                                                     map: map
                                                 });
+                                                if (attrs.icon) {
+                                                    marker.setIcon(attrs.icon);
+                                                }
                                             } else {
                                                 marker.setPosition(coords);
                                             }
