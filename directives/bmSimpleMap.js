@@ -47,6 +47,9 @@ angular.module("bmComponents").directive("bmSimpleMap", ["$timeout", "$parse",
                                 position: coords,
                                 map: map
                             });
+                            if (markerData.icon) {
+                                marker.setIcon(markerData.icon);
+                            }
                         } else {
                             marker.setPosition(coords);
                         }
@@ -82,6 +85,9 @@ angular.module("bmComponents").directive("bmSimpleMap", ["$timeout", "$parse",
                                                     position: coords,
                                                     map: map
                                                 });
+                                                if (attrs.icon) {
+                                                    marker.setIcon(attrs.icon);
+                                                }
                                             } else {
                                                 marker.setPosition(coords);
                                             }
