@@ -128,34 +128,33 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
         }
     }
 })
-;angular.module("bmComponents").directive("bmInputSync", ["$timeout",
-    function ($timeout) {
+;angular.module("bmComponents").directive("bmInputSync", ["$timeout", "$interval",
+    function ($timeout, $interval) {
 
         return {
             restrict : "A",
             require: "?ngModel",
             link : function(scope, element, attrs, ngModel) {
 
-                var timer;
+                var interval;
 
-                function startTimer() {
-                    timer = $timeout(function () {
-                        var value = element.val();
-                        if (value && ngModel.$viewValue !== value) {
-                            ngModel.$setViewValue(value);
-                        }
-                        startTimer();
-                    }, 500);
+                function syncValues() {
+                    var value = element.val();
+                    if (value && ngModel.$viewValue !== value) {
+                        ngModel.$setViewValue(value);
+                    }
                 }
 
                 scope.$on("$destroy", function () {
-                    $timeout.cancel(timer);
+                    $interval.cancel(interval);
                 });
 
-                scope.$on("bmLoginRequired", startTimer);
+                scope.$on("bmLoginRequired", function () {
+                    interval = $interval(syncValues, 500);
+                });
 
                 scope.$on("bmLoginConfirmed", function () {
-                    $timeout.cancel(timer);
+                    $interval.cancel(interval);
                 });
             }
         }
