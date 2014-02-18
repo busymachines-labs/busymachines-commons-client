@@ -14,7 +14,7 @@ angular.module("bmComponents").factory("bmUsers", ["$http", "$location", "$rootS
                     .then(function (data) {
                         var expirationDate = new Date(),
                             isChrome = (/Chrome\/[.0-9]/gi).test(navigator.userAgent),
-                            domain = isChrome && $location.host() === "localhost" ? "" : $location.host();
+                            domain = isChrome && $location.host().indexOf(".") < 0 ? "" : $location.host();
 
                         expirationDate.setDate(expirationDate.getDate() + 1);
                         data.data.loginName = userData.loginName;
