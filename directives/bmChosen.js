@@ -7,21 +7,25 @@ angular.module("bmComponents").directive("bmChosen", ["$timeout",
                 element.chosen();
 
                 scope.$watch(attrs.bmChosen, function (data) {
-                    if (data) element.trigger("chosen:updated");
+                    if (data) {
+                        $timeout(function () {
+                            element.trigger("chosen:updated");
+                        });
+                    }
                 });
 
                 scope.$watch(attrs.ngDisabled, function (data) {
-                    if (data === false || data === true) element.trigger("chosen:updated");
+                    if (data === false || data === true) {
+                        $timeout(function () {
+                            element.trigger("chosen:updated");
+                        });
+                    }
                 });
 
                 scope.$on("switchMode", function() {
-                    var classes = element.attr("class").split(/\s+/),
-                        spanClass = classes.filter(function (className) {
-                            return className.indexOf("span") > -1;
-                        })[0];
-
-                    element.before("<p class='" + spanClass + " hidden'></p>");
-                    element.next(".chosen-container").css("width", element.prev().css("width"));
+                    $timeout(function () {
+                        element.next(".chosen-container").css("width", element.parent().width() + "px");
+                    });
                 });
             }
         }
