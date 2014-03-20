@@ -20,7 +20,7 @@ angular.module("bmComponents").directive("bmPhoneNumber", [
                     } else {
                         // it is invalid, return undefined (no model update)
                         ngModel.$setValidity("phone", false);
-                        return undefined;
+                        return viewValue;
                     }
                 });
             }

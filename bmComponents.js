@@ -249,7 +249,7 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
                     } else {
                         // it is invalid, return undefined (no model update)
                         ngModel.$setValidity("phone", false);
-                        return undefined;
+                        return viewValue;
                     }
                 });
             }
