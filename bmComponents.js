@@ -83,15 +83,11 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
 ]);;angular.module("bmComponents").directive("bmFileUpload", ["$parse", function ($parse) {
     return {
         restrict: "A",
-//        scope: {
-//            bmFileUpload: "=",
-//            bmReadyFlag: "=",
-//            ngDisabled: "="
-//        },
         link: function(scope, elem, attrs) {
             var reader,
                 bmFileUpload = $parse(attrs.bmFileUpload),
                 bmReadyFlag = $parse(attrs.bmReadyFlag),
+                bmFileChangedFlag = $parse(attrs.bmFileChangedFlag),
                 file;
 
             if (window.File && window.FileReader && window.FileList && window.Blob) {
@@ -110,9 +106,9 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
                     file = e.target.files[0];
                     reader.readAsDataURL(file);
                     bmReadyFlag.assign(scope, false);
+                    bmFileChangedFlag.assign(scope, true);
                     scope.$apply();
                 });
-
             }
 
             scope.$on("resetFileInputs", function () {
