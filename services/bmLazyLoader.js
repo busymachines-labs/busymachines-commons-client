@@ -19,6 +19,7 @@ angular.module("bmComponents").provider("bmLazyLoader", function () {
 
         return this.searchMethod(params).then(function (data) {
             instance.parseData(data);
+            instance.setLoadMoreStatus();
             return data;
         });
     }
@@ -33,6 +34,7 @@ angular.module("bmComponents").provider("bmLazyLoader", function () {
         if (this.destinationArray.length < this.totalCount) {
             return this.searchMethod(params).then(function (data) {
                 instance.parseData(data);
+                instance.setLoadMoreStatus();
                 return data;
             });
         } else {
@@ -49,6 +51,7 @@ angular.module("bmComponents").provider("bmLazyLoader", function () {
 
         return this.searchMethod(params).then(function (data) {
             instance.parseData(data);
+            instance.setLoadMoreStatus();
             return data;
         });
     };
@@ -83,6 +86,10 @@ angular.module("bmComponents").provider("bmLazyLoader", function () {
 
         this.destinationArray.length = 0;
         this.destinationArray.push.apply(this.destinationArray, data.data[resultPropName]);
+    };
+
+    LazyLoader.prototype.setLoadMoreStatus = function () {
+        this.showLoadMore = this.destinationArray.length > 0 && this.totalCount != this.destinationArray.length;
     };
 
     LazyLoader.prototype.PAGE_SIZE = this.PAGE_SIZE;
