@@ -233,7 +233,7 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
                     var totalCount, barWidth, barPercentageWidth, barContainerWidth,
                         getMore, leftValue, rightValue, bar, getMorePosition;
                     if (newVal && newVal.length) {
-                        totalCount = scope[attrs.bmPagerTotal];
+                        totalCount = scope.$eval(attrs.bmPagerTotal);
                         bar = angular.element(".loading-bar", elem);
                         barContainerWidth = angular.element(".loading-bar-container", elem).width();
                         barPercentageWidth = (newVal.length * 100) / totalCount;
