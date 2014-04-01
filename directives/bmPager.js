@@ -4,7 +4,7 @@ angular.module("bmComponents").directive("bmPager", [
             replace: false,
             restrict: "A",
             link: function (scope, elem, attrs) {
-                scope.$watch(attrs.fdcPager, function (newVal, oldVal) {
+                scope.$watch(attrs.bmPager, function (newVal, oldVal) {
                     var totalCount, barWidth, barPercentageWidth, barContainerWidth,
                         getMore, leftValue, rightValue, bar, getMorePosition;
                     if (newVal && newVal.length) {
