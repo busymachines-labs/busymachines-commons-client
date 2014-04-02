@@ -6,7 +6,8 @@ angular.module("bmComponents").directive("bmFileUpload", ["$parse", function ($p
                 bmFileUpload = $parse(attrs.bmFileUpload),
                 bmReadyFlag = $parse(attrs.bmReadyFlag),
                 bmFileChangedFlag = $parse(attrs.bmFileChangedFlag),
-                file;
+                file,
+                fileChanged = false;
 
             if (window.File && window.FileReader && window.FileList && window.Blob) {
                 reader = new FileReader();
@@ -25,6 +26,10 @@ angular.module("bmComponents").directive("bmFileUpload", ["$parse", function ($p
                     reader.readAsDataURL(file);
                     bmReadyFlag.assign(scope, false);
                     bmFileChangedFlag.assign(scope, true);
+                    if (!fileChanged) {
+                        scope.$eval(attrs.bmFileChanged);
+                    }
+                    fileChanged = true;
                     scope.$apply();
                 });
             }
