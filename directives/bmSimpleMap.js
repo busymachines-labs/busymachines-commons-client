@@ -53,7 +53,10 @@ angular.module("bmComponents").directive("bmSimpleMap", ["$timeout", "$parse",
                         } else {
                             marker.setPosition(coords);
                         }
-                        map.setCenter(coords);
+                        $timeout(function() {
+                            google.maps.event.trigger(map, "resize");
+                            map.setCenter(coords);
+                        });
                     }
                 }, true);
 
