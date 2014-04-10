@@ -6,7 +6,8 @@ angular.module("bmComponents").directive("bmInputSync", ["$timeout", "$interval"
             require: "?ngModel",
             link : function(scope, element, attrs, ngModel) {
 
-                var interval;
+                var interval,
+                    continuous = scope.$eval(attrs.continuous);
 
                 function syncValues() {
                     var value = element.val();
@@ -15,16 +16,24 @@ angular.module("bmComponents").directive("bmInputSync", ["$timeout", "$interval"
                     }
                 }
 
+                if (continuous) {
+                    interval = $interval(syncValues, 500);
+                }
+
                 scope.$on("$destroy", function () {
                     $interval.cancel(interval);
                 });
 
                 scope.$on("bmLoginRequired", function () {
-                    interval = $interval(syncValues, 500);
+                    if (!continuous) {
+                        interval = $interval(syncValues, 500);
+                    }
                 });
 
                 scope.$on("bmLoginConfirmed", function () {
-                    $interval.cancel(interval);
+                    if (!continuous) {
+                        $interval.cancel(interval);
+                    }
                 });
             }
         }
