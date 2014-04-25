@@ -60,6 +60,16 @@ angular.module("bmComponents").directive("bmSimpleMap", ["$timeout", "$parse",
                     }
                 }, true);
 
+                if (attrs.ngShow) {
+                    scope.$watch(attrs.ngShow, function (val) {
+                        if (val) {
+                            $timeout(function() {
+                                google.maps.event.trigger(map, "resize");
+                            });
+                        }
+                    });
+                }
+
                 scope.$watch(attrs.geolocationData, function (newValue, oldValue) {
 
                     var addressObj,
