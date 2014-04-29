@@ -432,7 +432,7 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
                 if (attrs.ngShow) {
                     scope.$watch(attrs.ngShow, function (val) {
                         if (val) {
-                            $timeout(function() {
+                            scope.$evalAsync(function () {
                                 google.maps.event.trigger(map, "resize");
                             });
                         }
