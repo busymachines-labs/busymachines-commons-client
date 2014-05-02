@@ -63,9 +63,15 @@ angular.module("bmComponents").directive("bmSimpleMap", ["$timeout", "$parse",
                 if (attrs.ngShow) {
                     scope.$watch(attrs.ngShow, function (val) {
                         if (val) {
-                            scope.$evalAsync(function () {
+                            $timeout(function () {
                                 google.maps.event.trigger(map, "resize");
-                            });
+                            }, 300);
+                            $timeout(function () {
+                                google.maps.event.trigger(map, "resize");
+                            }, 600);
+                            $timeout(function () {
+                                google.maps.event.trigger(map, "resize");
+                            }, 900);
                         }
                     });
                 }
