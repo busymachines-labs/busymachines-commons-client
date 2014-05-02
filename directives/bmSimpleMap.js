@@ -60,21 +60,18 @@ angular.module("bmComponents").directive("bmSimpleMap", ["$timeout", "$parse",
                     }
                 }, true);
 
-                if (attrs.ngShow) {
-                    scope.$watch(attrs.ngShow, function (val) {
-                        if (val) {
-                            $timeout(function () {
-                                google.maps.event.trigger(map, "resize");
-                            }, 300);
-                            $timeout(function () {
-                                google.maps.event.trigger(map, "resize");
-                            }, 600);
-                            $timeout(function () {
-                                google.maps.event.trigger(map, "resize");
-                            }, 900);
-                        }
-                    });
-                }
+                scope.$watch(function () {
+                    return element.is(":visible");
+                }, function(newVal) {
+                    if (newVal) {
+                        $timeout(function () {
+                            google.maps.event.trigger(map, "resize");
+                            if (marker) {
+                                map.setCenter(marker.getPosition());
+                            }
+                        });
+                    }
+                });
 
                 scope.$watch(attrs.geolocationData, function (newValue, oldValue) {
 
