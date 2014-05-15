@@ -8,6 +8,7 @@ angular.module("bmComponents").provider("bmLazyLoader", function () {
         this.searchMethod = searchMethod;
         this.params = paramsObj;
         this.destinationArray = destination;
+        this.PAGE_SIZE = that.PAGE_SIZE;
     }
 
     LazyLoader.prototype.search = function () {
@@ -22,7 +23,7 @@ angular.module("bmComponents").provider("bmLazyLoader", function () {
             instance.setLoadMoreStatus();
             return data;
         });
-    }
+    };
 
     LazyLoader.prototype.getMore = function (howMany) {
         var params = this.getParams(),
@@ -40,7 +41,7 @@ angular.module("bmComponents").provider("bmLazyLoader", function () {
         } else {
             return that.$q.when({});
         }
-    }
+    };
 
     LazyLoader.prototype.refresh = function () {
         var params = this.getParams(),
