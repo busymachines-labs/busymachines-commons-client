@@ -759,7 +759,11 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
                     if (this.params[i].length) {
                         params[i] = this.params[i].join(",");
                     }
-                } else if (this.params[i]) {
+                } else if (typeof this.params[i] === "boolean") {
+                    params[i] = this.params[i];
+                } else if (angular.isNumber(this.params[i])) {
+                    params[i] = this.params[i];
+                } else if (angular.isString(this.params[i]) && this.params[i].length > 0) {
                     params[i] = this.params[i];
                 }
             }
