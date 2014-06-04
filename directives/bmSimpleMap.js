@@ -70,6 +70,18 @@ angular.module("bmComponents").directive("bmSimpleMap", ["$timeout", "$parse",
                                 map.setCenter(marker.getPosition());
                             }
                         });
+                        $timeout(function () {
+                            google.maps.event.trigger(map, "resize");
+                            if (marker) {
+                                map.setCenter(marker.getPosition());
+                            }
+                        }, 200);
+                        $timeout(function () {
+                            google.maps.event.trigger(map, "resize");
+                            if (marker) {
+                                map.setCenter(marker.getPosition());
+                            }
+                        }, 400);
                     }
                 });
 

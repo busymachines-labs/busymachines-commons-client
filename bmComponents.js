@@ -446,6 +446,18 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
                                 map.setCenter(marker.getPosition());
                             }
                         });
+                        $timeout(function () {
+                            google.maps.event.trigger(map, "resize");
+                            if (marker) {
+                                map.setCenter(marker.getPosition());
+                            }
+                        }, 200);
+                        $timeout(function () {
+                            google.maps.event.trigger(map, "resize");
+                            if (marker) {
+                                map.setCenter(marker.getPosition());
+                            }
+                        }, 400);
                     }
                 });
 
