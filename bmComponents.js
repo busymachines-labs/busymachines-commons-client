@@ -436,9 +436,7 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
                     }
                 }, true);
 
-                scope.$watch(function () {
-                    return element.is(":visible");
-                }, function(newVal) {
+                scope.$watch(attrs.triggerResize, function(newVal) {
                     if (newVal) {
                         $timeout(function () {
                             google.maps.event.trigger(map, "resize");
