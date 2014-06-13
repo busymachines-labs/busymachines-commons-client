@@ -4,7 +4,7 @@ angular.module("bmComponents").directive("bmMapBox", [
             restrict : "A",
             link : function(scope, element, attrs) {
                 var map = L.mapbox.map(element.get(0), attrs.mapKey).setView([52.285, 5.724], 7),
-                    markerLayer = L.mapbox.markerLayer().addTo(map),
+                    featureLayer = L.mapbox.featureLayer().addTo(map),
                     mapLoaded = false,
                     zoom,
                     mapKey;
@@ -16,7 +16,9 @@ angular.module("bmComponents").directive("bmMapBox", [
 
                 scope.$watch(attrs.geoJson, function (val) {
                     if (val) {
-                        markerLayer.setGeoJSON(val);
+                        featureLayer.setGeoJSON(val);
+                        if('getBounds' in attrs)
+                            map.fitBounds(featureLayer.getBounds());
                     }
                 }, true);
             }
