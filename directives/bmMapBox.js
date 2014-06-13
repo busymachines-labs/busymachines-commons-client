@@ -17,8 +17,9 @@ angular.module("bmComponents").directive("bmMapBox", [
                 scope.$watch(attrs.geoJson, function (val) {
                     if (val) {
                         featureLayer.setGeoJSON(val);
-                        if('getBounds' in attrs)
+                        if('getBounds' in attrs) {
                             map.fitBounds(featureLayer.getBounds());
+                        }
                     }
                 }, true);
             }
