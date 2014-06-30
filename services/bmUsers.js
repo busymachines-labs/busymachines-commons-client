@@ -10,7 +10,7 @@ angular.module("bmComponents").factory("bmUsers", ["$http", "$location", "$rootS
 
         return {
             login: function (userData) {
-                return $http.post(bmApiUrls.getUrl("userAuthentication"), userData)
+                return $http.post(bmApiUrls.getUrl("bm","userAuthentication"), userData)
                     .then(function (data) {
                         var expirationDate = new Date(),
                             isChrome = (/Chrome\/[.0-9]/gi).test(navigator.userAgent),
@@ -25,7 +25,7 @@ angular.module("bmComponents").factory("bmUsers", ["$http", "$location", "$rootS
                     });
             },
             logout: function (authToken) {
-                return $http.delete(bmApiUrls.getUrl("userAuthentication") + "/" + authToken)
+                return $http.delete(bmApiUrls.getUrl("bm", "userAuthentication") + "/" + authToken)
                     .then(logout, logout);
             }
         }

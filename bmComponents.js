@@ -511,32 +511,64 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
 ;angular.module("bmComponents").provider("bmApiUrls", function () {
 
     var that = this;
+    var urlMap = {};
 
-    this.hostname = "";
-    this.apiVersion = "";
-    this.port = "";
-    this.secure = false;
-    this.urls = {};
-    this.urlGenerator = null;
+    this.setHostname = function (id, value) {
+        if (!urlMap[id]) {
+            urlMap[id] = {};
+        }
+        urlMap[id]["hostname"] = value;
+    };
+
+    this.setApiVersion = function (id, value) {
+        if (!urlMap[id]) {
+            urlMap[id] = {};
+        }
+        urlMap[id]["apiVersion"] = value;
+    };
+
+    this.setPort = function (id, value) {
+        if (!urlMap[id]) {
+            urlMap[id] = {};
+        }
+        urlMap[id]["port"] = value;
+    };
+
+    this.setSecure = function (id, value) {
+        if (!urlMap[id]) {
+            urlMap[id] = {};
+        }
+        urlMap[id]["secure"] = value;
+    };
+
+    this.setUrlGenerator = function (id, value) {
+        if (!urlMap[id]) {
+            urlMap[id] = {};
+        }
+        urlMap[id]["urlGenerator"] = value;
+    };
+
+    this.setUrls = function (id, value) {
+        if (!urlMap[id]) {
+            urlMap[id] = {};
+        }
+        if (!urlMap[id]["urls"]) {
+            urlMap[id]["urls"] = {};
+        }
+        angular.extend(urlMap[id].urls, value);
+    };
 
     this.$get = function () {
         return {
-            hostname: that.hostname,
-            apiVersion: that.apiVersion,
-            port: that.port,
-            secure: that.secure,
-            urls: that.urls,
-            urlGenerator: that.urlGenerator,
-            getPort: function (escape) {
-                if (this.port) {
-                    return escape ? ":" + this.port + "\\:" + this.port : ":" + this.port;
-                } else {
-                    return "";
-                }
-            },
-            getUrl: function (key, escapePort) {
+            setUrls: that.setUrls,
+            setApiVersion: that.setApiVersion,
+            setPort: that.setPort,
+            setSecure: that.setSecure,
+            setHostname: that.setHostname,
+            setUrlGenerator: that.setUrlGenerator,
+            getUrl: function (id, key) {
 
-                var url = this.urls[key],
+                var url = urlMap[id].urls[key],
                     argsArray;
 
                 if (angular.isFunction(url)) {
@@ -545,15 +577,15 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
                     url = url.apply(null, argsArray);
                 }
 
-                if (angular.isFunction(this.urlGenerator)) {
-                    return (this.hostname ? this.secure ? "https://" : "http://" : "") +
-                        this.urlGenerator(this.hostname, this.getPort(escapePort), this.apiVersion) +
+                if (angular.isFunction(urlMap[id].urlGenerator)) {
+                    return (urlMap[id].hostname ? urlMap[id].secure ? "https://" : "http://" : "") +
+                        urlMap[id].urlGenerator(urlMap[id].hostname, urlMap[id].port, urlMap[id].apiVersion) +
                         url;
                 } else {
-                    return (this.hostname ? this.secure ? "https://" : "http://" : "") +
-                        this.hostname +
-                        this.getPort(escapePort) +
-                        "/v" + this.apiVersion +
+                    return (urlMap[id].hostname ? urlMap[id].secure ? "https://" : "http://" : "") +
+                        urlMap[id].hostname +
+                        urlMap[id].port +
+                        "/v" + urlMap[id].apiVersion +
                         url;
                 }
             }
@@ -855,7 +887,7 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
 
         return {
             login: function (userData) {
-                return $http.post(bmApiUrls.getUrl("userAuthentication"), userData)
+                return $http.post(bmApiUrls.getUrl("bm","userAuthentication"), userData)
                     .then(function (data) {
                         var expirationDate = new Date(),
                             isChrome = (/Chrome\/[.0-9]/gi).test(navigator.userAgent),
@@ -870,7 +902,7 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
                     });
             },
             logout: function (authToken) {
-                return $http.delete(bmApiUrls.getUrl("userAuthentication") + "/" + authToken)
+                return $http.delete(bmApiUrls.getUrl("bm", "userAuthentication") + "/" + authToken)
                     .then(logout, logout);
             }
         }
@@ -918,6 +950,8 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
 });
 ;angular.module("bmComponents").config(["bmApiUrlsProvider",
     function (bmApiUrlsProvider) {
-        bmApiUrlsProvider.urls.userAuthentication = "/users/authentication";
+        bmApiUrlsProvider.setUrls("bm", {
+            userAuthentication: "/users/authentication"
+        });
     }
 ]);
