@@ -4,7 +4,23 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
         return {
             restrict : "A",
             link : function(scope, element, attrs) {
-                element.chosen();
+
+                var flags = {
+                    disableSearch: false,
+                    noResultsText: false
+                }, options = {};
+
+                function init() {
+                    var ready = true;
+
+                    for (var i in flags) {
+                        if (flags[i] === false) {
+                            ready = false;
+                        }
+                    }
+
+                    ready && element.chosen(options);
+                }
 
                 scope.$watch(attrs.bmChosen, function (data) {
                     if (data) {
@@ -27,6 +43,31 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
                         element.next(".chosen-container").css("width", element.parent().width() + "px");
                     });
                 });
+
+                if (!isNaN(parseInt(attrs.disableSearch))) {
+                    options["disable_search_threshold"] = parseInt(attrs.disableSearch);
+                    flags.disableSearch = true;
+                    init();
+                } else {
+                    options["disable_search_threshold"] = scope.$eval(attrs.disableSearch);
+                    flags.disableSearch = true;
+                    init();
+                }
+
+                if (!attrs.disableSearch) {
+                    delete flags.disableSearch;
+                    init();
+                }
+
+                if (!attrs.noResultsText) {
+                    delete flags.noResultsText;
+                    init();
+                } else {
+                    options["no_results_text"] = attrs.noResultsText;
+                    flags.noResultsText = true;
+                    init();
+                }
+
             }
         }
     }
