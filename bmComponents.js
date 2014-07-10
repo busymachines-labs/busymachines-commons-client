@@ -795,6 +795,7 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
         this.params = paramsObj;
         this.destinationArray = destination;
         this.PAGE_SIZE = that.PAGE_SIZE;
+        this.options = {};
     }
 
     LazyLoader.prototype.search = function () {
@@ -804,7 +805,7 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
         params.from = 0;
         params.size = this.PAGE_SIZE;
 
-        return this.searchMethod(params).then(function (data) {
+        return this.searchMethod(params, this.options).then(function (data) {
             instance.parseData(data);
             instance.setLoadMoreStatus();
             return data;
@@ -819,7 +820,7 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
         params.size = this.destinationArray.length + (howMany || this.PAGE_SIZE);
 
         if (this.destinationArray.length < this.totalCount) {
-            return this.searchMethod(params).then(function (data) {
+            return this.searchMethod(params, this.options).then(function (data) {
                 instance.parseData(data);
                 instance.setLoadMoreStatus();
                 return data;
@@ -836,7 +837,7 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
         params.from = 0;
         params.size = this.destinationArray.length;
 
-        return this.searchMethod(params).then(function (data) {
+        return this.searchMethod(params, this.options).then(function (data) {
             instance.parseData(data);
             instance.setLoadMoreStatus();
             return data;
@@ -895,8 +896,7 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
             }
         }
     ]
-});
-;angular.module("bmComponents").factory("bmMessageQueue", ["$rootScope", function($rootScope) {
+});;angular.module("bmComponents").factory("bmMessageQueue", ["$rootScope", function($rootScope) {
     var messages = [];
 
     return {
