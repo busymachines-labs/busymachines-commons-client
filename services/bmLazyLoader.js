@@ -9,6 +9,7 @@ angular.module("bmComponents").provider("bmLazyLoader", function () {
         this.params = paramsObj;
         this.destinationArray = destination;
         this.PAGE_SIZE = that.PAGE_SIZE;
+        this.options = {};
     }
 
     LazyLoader.prototype.search = function () {
@@ -18,7 +19,7 @@ angular.module("bmComponents").provider("bmLazyLoader", function () {
         params.from = 0;
         params.size = this.PAGE_SIZE;
 
-        return this.searchMethod(params).then(function (data) {
+        return this.searchMethod(params, this.options).then(function (data) {
             instance.parseData(data);
             instance.setLoadMoreStatus();
             return data;
@@ -33,7 +34,7 @@ angular.module("bmComponents").provider("bmLazyLoader", function () {
         params.size = this.destinationArray.length + (howMany || this.PAGE_SIZE);
 
         if (this.destinationArray.length < this.totalCount) {
-            return this.searchMethod(params).then(function (data) {
+            return this.searchMethod(params, this.options).then(function (data) {
                 instance.parseData(data);
                 instance.setLoadMoreStatus();
                 return data;
@@ -50,7 +51,7 @@ angular.module("bmComponents").provider("bmLazyLoader", function () {
         params.from = 0;
         params.size = this.destinationArray.length;
 
-        return this.searchMethod(params).then(function (data) {
+        return this.searchMethod(params, this.options).then(function (data) {
             instance.parseData(data);
             instance.setLoadMoreStatus();
             return data;
