@@ -74,7 +74,7 @@ angular.module("bmComponents").provider("bmApiUrls", function () {
                 } else {
                     return (urlMap[id].hostname ? urlMap[id].secure ? "https://" : "http://" : "") +
                         urlMap[id].hostname +
-                        urlMap[id].port +
+                        (urlMap[id].port ? ":" + urlMap[id].port : "") +
                         "/v" + urlMap[id].apiVersion +
                         url;
                 }
