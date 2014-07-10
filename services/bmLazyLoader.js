@@ -9,24 +9,23 @@ angular.module("bmComponents").provider("bmLazyLoader", function () {
         this.params = paramsObj;
         this.destinationArray = destination;
         this.PAGE_SIZE = that.PAGE_SIZE;
-        this.options = {};
     }
 
-    LazyLoader.prototype.search = function () {
+    LazyLoader.prototype.search = function (options) {
         var params = this.getParams(),
             instance = this;
 
         params.from = 0;
         params.size = this.PAGE_SIZE;
 
-        return this.searchMethod(params, this.options).then(function (data) {
+        return this.searchMethod(params, options).then(function (data) {
             instance.parseData(data);
             instance.setLoadMoreStatus();
             return data;
         });
     };
 
-    LazyLoader.prototype.getMore = function (howMany) {
+    LazyLoader.prototype.getMore = function (howMany, options) {
         var params = this.getParams(),
             instance = this;
 
@@ -34,7 +33,7 @@ angular.module("bmComponents").provider("bmLazyLoader", function () {
         params.size = this.destinationArray.length + (howMany || this.PAGE_SIZE);
 
         if (this.destinationArray.length < this.totalCount) {
-            return this.searchMethod(params, this.options).then(function (data) {
+            return this.searchMethod(params, options).then(function (data) {
                 instance.parseData(data);
                 instance.setLoadMoreStatus();
                 return data;
@@ -44,14 +43,14 @@ angular.module("bmComponents").provider("bmLazyLoader", function () {
         }
     };
 
-    LazyLoader.prototype.refresh = function () {
+    LazyLoader.prototype.refresh = function (options) {
         var params = this.getParams(),
             instance = this;
 
         params.from = 0;
         params.size = this.destinationArray.length;
 
-        return this.searchMethod(params, this.options).then(function (data) {
+        return this.searchMethod(params, options).then(function (data) {
             instance.parseData(data);
             instance.setLoadMoreStatus();
             return data;
