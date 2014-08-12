@@ -545,6 +545,38 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
                         }
                     }
                 }, true);
+
+                scope.$watch(attrs.mapData, function (mapData) {
+                    if(mapData) {
+                        var infowindow = new google.maps.InfoWindow();
+                        var bounds = new google.maps.LatLngBounds();
+                        mapData.forEach(function(location){
+                            var myLatLng = new google.maps.LatLng(location.latitude, location.longitude);
+                            marker = new google.maps.Marker({
+                                position: myLatLng,
+                                map: map
+                            });
+                            if (attrs.icon) {
+                                marker.setIcon(attrs.icon);
+                            }
+                            bounds.extend(myLatLng);
+                            google.maps.event.addListener(marker, 'click', (function(marker) {
+                                return function() {
+                                    infowindow.setContent(location.street + " " + location.houseNumber + " " + location.zipCode);
+                                    infowindow.open(map, marker);
+                                }
+                            })(marker));
+                        });
+                    }
+
+                    google.maps.event.addListenerOnce(map, 'idle', function(){
+                        map.fitBounds(bounds);
+                        map.panToBounds(bounds);
+                        map.setCenter(bounds.getCenter());
+                    });
+
+                }, true);
+
             }
         }
     }
