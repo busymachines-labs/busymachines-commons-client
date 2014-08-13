@@ -147,13 +147,11 @@ angular.module("bmComponents").directive("bmSimpleMap", ["$timeout", "$parse",
                                 }
                             })(marker));
                         });
+                        google.maps.event.addListenerOnce(map, 'idle', function(){
+                            map.fitBounds(bounds);
+                            map.setCenter(bounds.getCenter());
+                        });
                     }
-
-                    google.maps.event.addListenerOnce(map, 'idle', function(){
-                        map.fitBounds(bounds);
-                        map.panToBounds(bounds);
-                        map.setCenter(bounds.getCenter());
-                    });
 
                 }, true);
 

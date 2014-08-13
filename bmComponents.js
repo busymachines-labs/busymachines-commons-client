@@ -567,13 +567,11 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
                                 }
                             })(marker));
                         });
+                        google.maps.event.addListenerOnce(map, 'idle', function(){
+                            map.fitBounds(bounds);
+                            map.setCenter(bounds.getCenter());
+                        });
                     }
-
-                    google.maps.event.addListenerOnce(map, 'idle', function(){
-                        map.fitBounds(bounds);
-                        map.panToBounds(bounds);
-                        map.setCenter(bounds.getCenter());
-                    });
 
                 }, true);
 
