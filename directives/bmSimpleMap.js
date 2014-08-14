@@ -139,13 +139,19 @@ angular.module("bmComponents").directive("bmSimpleMap", ["$timeout", "$parse",
                             if (attrs.icon) {
                                 marker.setIcon(attrs.icon);
                             }
+                            if(location.icon) {
+                                console.log(location.icon);
+                                marker.setIcon(location.icon);
+                            }
                             bounds.extend(myLatLng);
-                            google.maps.event.addListener(marker, 'click', (function(marker) {
-                                return function() {
-                                    infowindow.setContent(location.street + " " + location.houseNumber + " " + location.zipCode);
-                                    infowindow.open(map, marker);
-                                }
-                            })(marker));
+                            if(location.street && location.houseNumber && location.zipCode) {
+                                google.maps.event.addListener(marker, 'click', (function (marker) {
+                                    return function () {
+                                        infowindow.setContent(location.street + " " + location.houseNumber + " " + location.zipCode);
+                                        infowindow.open(map, marker);
+                                    }
+                                })(marker));
+                            }
                         });
                         google.maps.event.addListenerOnce(map, 'idle', function(){
                             map.fitBounds(bounds);
