@@ -1,6 +1,6 @@
 {
   "name": "busymachines-commons-client",
-  "version": "1.8.30",
+  "version": "1.8.31",
   "homepage": "https://github.com/busymachines/busymachines-commons-client",
   "main": "./bmComponents.js",
   "authors": [

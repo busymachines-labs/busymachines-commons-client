@@ -144,10 +144,10 @@ angular.module("bmComponents").directive("bmSimpleMap", ["$timeout", "$parse",
                                 marker.setIcon(location.icon);
                             }
                             bounds.extend(myLatLng);
-                            if(location.street && location.houseNumber && location.zipCode) {
+                            if(location.tooltip) {
                                 google.maps.event.addListener(marker, 'click', (function (marker) {
                                     return function () {
-                                        infowindow.setContent(location.street + " " + location.houseNumber + " " + location.zipCode);
+                                        infowindow.setContent(location.tooltip);
                                         infowindow.open(map, marker);
                                     }
                                 })(marker));
