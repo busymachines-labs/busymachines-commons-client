@@ -2,7 +2,7 @@ angular.module("bmComponents").directive("bmSimpleMap", ["$timeout", "$parse",
     function ($timeout, $parse) {
         return {
             restrict: "A",
-            link: function(scope, element, attrs) {
+            link: function (scope, element, attrs) {
 
                 google.maps.visualRefresh = true;
 
@@ -16,9 +16,9 @@ angular.module("bmComponents").directive("bmSimpleMap", ["$timeout", "$parse",
                     marker,
                     timeoutPromise;
 
-                scope.$watch("visible", function(value) {
+                scope.$watch("visible", function (value) {
                     if (value) {
-                        $timeout(function() {
+                        $timeout(function () {
                             google.maps.event.trigger(map, "resize");
                             if (coords) {
                                 map.setCenter(coords);
@@ -28,7 +28,7 @@ angular.module("bmComponents").directive("bmSimpleMap", ["$timeout", "$parse",
                 });
 
                 scope.$on("switchMode", function () {
-                    $timeout(function() {
+                    $timeout(function () {
                         google.maps.event.trigger(map, "resize");
                     });
                 });
@@ -53,14 +53,14 @@ angular.module("bmComponents").directive("bmSimpleMap", ["$timeout", "$parse",
                         } else {
                             marker.setPosition(coords);
                         }
-                        $timeout(function() {
+                        $timeout(function () {
                             google.maps.event.trigger(map, "resize");
                             map.setCenter(coords);
                         });
                     }
                 }, true);
 
-                scope.$watch(attrs.triggerResize, function(newVal) {
+                scope.$watch(attrs.triggerResize, function (newVal) {
                     if (newVal) {
                         $timeout(function () {
                             google.maps.event.trigger(map, "resize");
@@ -100,7 +100,7 @@ angular.module("bmComponents").directive("bmSimpleMap", ["$timeout", "$parse",
                                         (newValue.houseNumberSuffix ? newValue.houseNumberSuffix : "") +
                                         newValue.zipCode + " " + newValue.city
                                 };
-                                geocoder.geocode(addressObj, function(results, status) {
+                                geocoder.geocode(addressObj, function (results, status) {
                                     if (status == google.maps.GeocoderStatus.OK) {
                                         scope.$apply(function () {
                                             locationLatitudeSetter(scope, results[0].geometry.location.lat());
@@ -127,10 +127,10 @@ angular.module("bmComponents").directive("bmSimpleMap", ["$timeout", "$parse",
                 }, true);
 
                 scope.$watch(attrs.mapData, function (mapData) {
-                    if(mapData) {
+                    if (mapData) {
                         var infowindow = new google.maps.InfoWindow();
                         var bounds = new google.maps.LatLngBounds();
-                        mapData.forEach(function(location){
+                        mapData.forEach(function (location) {
                             var myLatLng = new google.maps.LatLng(location.latitude, location.longitude);
                             marker = new google.maps.Marker({
                                 position: myLatLng,
@@ -139,12 +139,11 @@ angular.module("bmComponents").directive("bmSimpleMap", ["$timeout", "$parse",
                             if (attrs.icon) {
                                 marker.setIcon(attrs.icon);
                             }
-                            if(location.icon) {
-                                console.log(location.icon);
+                            if (location.icon) {
                                 marker.setIcon(location.icon);
                             }
                             bounds.extend(myLatLng);
-                            if(location.tooltip) {
+                            if (location.tooltip) {
                                 google.maps.event.addListener(marker, 'click', (function (marker) {
                                     return function () {
                                         infowindow.setContent(location.tooltip);
@@ -153,7 +152,7 @@ angular.module("bmComponents").directive("bmSimpleMap", ["$timeout", "$parse",
                                 })(marker));
                             }
                         });
-                        google.maps.event.addListenerOnce(map, 'idle', function(){
+                        google.maps.event.addListenerOnce(map, 'idle', function () {
                             map.fitBounds(bounds);
                             map.setCenter(bounds.getCenter());
                         });
