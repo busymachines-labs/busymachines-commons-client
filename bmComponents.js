@@ -127,6 +127,7 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
             if(event.which === 13) {
                 scope.$apply(function (){
                     scope.$eval(attrs.bmEnter);
+                    element.blur();
                 });
             }
         });
