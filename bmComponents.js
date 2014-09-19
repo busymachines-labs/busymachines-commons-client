@@ -121,7 +121,17 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
             }
         }
     }
-]);;angular.module("bmComponents").directive("bmFileUpload", ["$parse", function ($parse) {
+]);;angular.module("bmComponents").directive('bmEnter', function () {
+    return function (scope, element, attrs) {
+        element.on("keyup", function (event) {
+            if(event.which === 13) {
+                scope.$apply(function (){
+                    scope.$eval(attrs.bmEnter);
+                });
+            }
+        });
+    };
+});;angular.module("bmComponents").directive("bmFileUpload", ["$parse", function ($parse) {
     return {
         restrict: "A",
         link: function(scope, elem, attrs) {
