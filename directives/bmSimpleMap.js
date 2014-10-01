@@ -1,5 +1,5 @@
-angular.module("bmComponents").directive("bmSimpleMap", ["$timeout", "$parse",
-    function ($timeout, $parse) {
+angular.module("bmComponents").directive("bmSimpleMap", ["$timeout", "$parse", "$location",
+    function ($timeout, $parse, $location) {
         return {
             restrict: "A",
             link: function (scope, element, attrs) {
