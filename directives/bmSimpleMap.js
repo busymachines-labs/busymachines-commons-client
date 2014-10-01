@@ -151,6 +151,17 @@ angular.module("bmComponents").directive("bmSimpleMap", ["$timeout", "$parse",
                                     }
                                 })(marker));
                             }
+                            if(attrs.goTo) {
+                                google.maps.event.addListener(marker, 'click', function (marker) {
+                                    var url = attrs.goTo;
+                                    for (var i in location.replaceData) {
+                                        url = url.replace(i, location.replaceData[i]);
+                                    }
+                                    scope.$apply(function() {
+                                        $location.url(url);
+                                    });
+                                });
+                            }
                         });
                         google.maps.event.addListenerOnce(map, 'idle', function () {
                             map.fitBounds(bounds);
