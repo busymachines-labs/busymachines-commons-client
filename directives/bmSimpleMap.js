@@ -81,7 +81,7 @@ angular.module("bmComponents").directive("bmSimpleMap", ["$timeout", "$parse", "
                             }
                         }, 400);
                     }
-                });
+                }, true);
 
                 scope.$watch(attrs.geolocationData, function (newValue, oldValue) {
 

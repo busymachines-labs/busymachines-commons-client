@@ -511,7 +511,7 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
                             }
                         }, 400);
                     }
-                });
+                }, true);
 
                 scope.$watch(attrs.geolocationData, function (newValue, oldValue) {
 
