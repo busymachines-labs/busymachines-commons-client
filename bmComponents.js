@@ -30,6 +30,10 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
                     }
                 });
 
+                scope.$watch(attrs.ngModel, function(model) {
+                    element.trigger("chosen:updated");
+                });
+
                 scope.$watch(attrs.ngDisabled, function (data) {
                     if (data === false || data === true) {
                         $timeout(function () {
