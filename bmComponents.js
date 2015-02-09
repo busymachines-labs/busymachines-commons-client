@@ -527,11 +527,11 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
                     if (newValue && oldValue && (newValue.street !== oldValue.street || newValue.houseNumber !== oldValue.houseNumber
                         || newValue.zipCode !== oldValue.zipCode || newValue.city !== oldValue.city)) {
                         $timeout.cancel(timeoutPromise);
-                        if (newValue && newValue.street && newValue.houseNumber && newValue.zipCode && newValue.city) {
+                        if (newValue && newValue.street && newValue.zipCode && newValue.city) {
                             timeoutPromise = $timeout(function () {
                                 addressObj = {
-                                    address: newValue.street + " " + newValue.houseNumber + " " +
-                                        (newValue.houseNumberSuffix ? newValue.houseNumberSuffix : "") +
+                                    address: newValue.street + " " +
+                                        (newValue.houseNumber ? newValue.houseNumber + (newValue.houseNumberSuffix ? newValue.houseNumberSuffix : "") + " " : "") +
                                         newValue.zipCode + " " + newValue.city
                                 };
                                 geocoder.geocode(addressObj, function (results, status) {
