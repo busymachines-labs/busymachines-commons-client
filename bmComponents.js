@@ -256,7 +256,7 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
                 }
 
                 scope.$watch(attrs.geoJson, function (val) {
-                    if (val) {
+                    if (val.length) {
                         featureLayer.setGeoJSON(val);
                         if('getBounds' in attrs) {
                             map.fitBounds(featureLayer.getBounds());
