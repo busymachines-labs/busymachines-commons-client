@@ -15,10 +15,12 @@ angular.module("bmComponents").directive("bmMapBox", [
                 }
 
                 scope.$watch(attrs.geoJson, function (val) {
-                    if (val.length) {
+                    if (val) {
                         featureLayer.setGeoJSON(val);
                         if('getBounds' in attrs) {
-                            map.fitBounds(featureLayer.getBounds());
+                            if(val.length)  {
+                                map.fitBounds(featureLayer.getBounds());
+                            }
                         }
                     }
                 }, true);
