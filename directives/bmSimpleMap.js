@@ -39,6 +39,16 @@ angular.module("bmComponents").directive("bmSimpleMap", ["$timeout", "$parse", "
                     }
                 });
 
+                scope.$watch(attrs.draggable, function (newVal) {
+                    if (marker) {
+                        if (newVal == true) {
+                            marker.setDraggable(true);
+                        } else {
+                            marker.setDraggable(false);
+                        }
+
+                    }
+                });
                 scope.$watch(attrs.mapMarker, function (markerData) {
                     if (markerData && markerData.latitude && markerData.longitude) {
                         coords = new google.maps.LatLng(markerData.latitude, markerData.longitude);
@@ -50,9 +60,39 @@ angular.module("bmComponents").directive("bmSimpleMap", ["$timeout", "$parse", "
                             if (markerData.icon) {
                                 marker.setIcon(markerData.icon);
                             }
+                            google.maps.event.addListener(marker, 'dragend', function(event) {
+                                var latitudeSetter = $parse(attrs.latitude).assign;
+                                var longitudeSetter = $parse(attrs.longitude).assign;
+                                var geocoder = new google.maps.Geocoder();
+                                geocoder.geocode({ 'latLng': coords }, function (results, status) {
+                                    if (status == google.maps.GeocoderStatus.OK ) {
+                                        var locationGetter = $parse(attrs.location);
+                                        var location = locationGetter(scope);
+                                        $timeout (function () {
+                                            results[0]['address_components'].forEach( function(result) {
+                                                if (result.types.indexOf("locality") !== -1) {
+                                                    location.city = result.long_name;
+                                                } else if (result.types.indexOf("route") !== -1) {
+                                                    location.street = result.long_name;
+                                                } else if (result.types.indexOf("street_number") !== -1) {
+                                                    location.houseNumber = parseInt(result.long_name);
+                                                }
+                                            });
+                                        })
+                                    }
+                                });
+                                $timeout( function (){
+                                    latitudeSetter(scope, event.latLng.lat());
+                                    longitudeSetter(scope, event.latLng.lng());
+
+                                });
+
+                            });
                         } else {
                             marker.setPosition(coords);
                         }
+
+
                         $timeout(function () {
                             google.maps.event.trigger(map, "resize");
                             map.setCenter(coords);
@@ -97,8 +137,8 @@ angular.module("bmComponents").directive("bmSimpleMap", ["$timeout", "$parse", "
                             timeoutPromise = $timeout(function () {
                                 addressObj = {
                                     address: newValue.street + " " +
-                                        (newValue.houseNumber ? newValue.houseNumber + (newValue.houseNumberSuffix ? newValue.houseNumberSuffix : "") + " " : "") +
-                                        newValue.zipCode + " " + newValue.city
+                                    (newValue.houseNumber ? newValue.houseNumber + (newValue.houseNumberSuffix ? newValue.houseNumberSuffix : "") + " " : "") +
+                                    newValue.zipCode + " " + newValue.city
                                 };
                                 geocoder.geocode(addressObj, function (results, status) {
                                     if (status == google.maps.GeocoderStatus.OK) {
