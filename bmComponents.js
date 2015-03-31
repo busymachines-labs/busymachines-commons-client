@@ -500,7 +500,7 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
                                 var latitudeSetter = $parse(attrs.latitude).assign;
                                 var longitudeSetter = $parse(attrs.longitude).assign;
                                 var geocoder = new google.maps.Geocoder();
-                                geocoder.geocode({ 'latLng': coords }, function (results, status) {
+                                geocoder.geocode({ 'latLng': new google.maps.LatLng(event.latLng.lat(), event.latLng.lng()) }, function (results, status) {
                                     if (status == google.maps.GeocoderStatus.OK ) {
                                         var locationGetter = $parse(attrs.location);
                                         var location = locationGetter(scope);
