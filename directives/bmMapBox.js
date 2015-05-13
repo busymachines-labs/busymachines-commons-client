@@ -1,5 +1,5 @@
-angular.module("bmComponents").directive("bmMapBox", [
-    function () {
+angular.module("bmComponents").directive("bmMapBox",  ["$timeout",
+    function ($timeout) {
         return {
             restrict : "A",
             link : function(scope, element, attrs) {
@@ -8,6 +8,10 @@ angular.module("bmComponents").directive("bmMapBox", [
                     mapLoaded = false,
                     zoom,
                     mapKey;
+
+		$timeout(function () {
+		    map.invalidateSize(true);
+		});
 
                 if (attrs.zoom) {
                     zoom = scope.$eval(attrs.zoom);

@@ -239,8 +239,8 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
             });
         }
     }
-});;angular.module("bmComponents").directive("bmMapBox", [
-    function () {
+});;angular.module("bmComponents").directive("bmMapBox",  ["$timeout",
+    function ($timeout) {
         return {
             restrict : "A",
             link : function(scope, element, attrs) {
@@ -249,6 +249,10 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
                     mapLoaded = false,
                     zoom,
                     mapKey;
+
+		$timeout(function () {
+		    map.invalidateSize(true);
+		});
 
                 if (attrs.zoom) {
                     zoom = scope.$eval(attrs.zoom);
@@ -268,7 +272,8 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
             }
         }
     }
-]);;angular.module("bmComponents").directive("bmNotification", ["$timeout", "bmMessageQueue",
+]);
+;angular.module("bmComponents").directive("bmNotification", ["$timeout", "bmMessageQueue",
     function ($timeout, bmMessageQueue) {
 
         return {
