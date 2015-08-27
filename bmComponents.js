@@ -455,7 +455,26 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
                     map = new google.maps.Map(element.get(0), options),
                     coords,
                     marker,
-                    timeoutPromise;
+                    timeoutPromise,
+                    addMarkerHandler;
+
+                function placeMarker(latLng, map) {
+                    var marker = new google.maps.Marker({
+                        position: latLng,
+                        map: map
+                    });
+                    console.log(attrs.mapMarker);
+                    if(attrs.mapMarker) {
+                        marker.setIcon(attrs.mapMarker.icon);
+                    }
+
+                    map.panTo(latLng);
+                    var locationLatitudeSetter = $parse(attrs.latitude).assign;
+                    var locationLongitudeSetter = $parse(attrs.longitude).assign;
+                    locationLatitudeSetter(scope, latLng.lat());
+                    locationLongitudeSetter(scope, latLng.lng());
+                    google.maps.event.removeListener(addMarkerHandler);
+                }
 
                 scope.$watch("visible", function (value) {
                     if (value) {
@@ -480,6 +499,15 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
                     }
                 });
 
+
+                scope.$watch(attrs.addMarker, function (noMarker) {
+                    if (noMarker) {
+                        addMarkerHandler = map.addListener('click', function(e) {
+                            placeMarker(e.latLng, map);
+                        });
+                    }
+                });
+
                 scope.$watch(attrs.draggable, function (newVal) {
                     if (marker) {
                         if (newVal == true) {
@@ -498,30 +526,13 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
                                 position: coords,
                                 map: map
                             });
-                            if (markerData.icon) {
-                                marker.setIcon(markerData.icon);
+                            if(attrs.icon) {
+                                marker.setIcon(attrs.icon);
                             }
                             google.maps.event.addListener(marker, 'dragend', function(event) {
                                 var latitudeSetter = $parse(attrs.latitude).assign;
                                 var longitudeSetter = $parse(attrs.longitude).assign;
                                 var geocoder = new google.maps.Geocoder();
-                                geocoder.geocode({ 'latLng': new google.maps.LatLng(event.latLng.lat(), event.latLng.lng()) }, function (results, status) {
-                                    if (status == google.maps.GeocoderStatus.OK ) {
-                                        var locationGetter = $parse(attrs.location);
-                                        var location = locationGetter(scope);
-                                        $timeout (function () {
-                                            results[0]['address_components'].forEach( function(result) {
-                                                if (result.types.indexOf("locality") !== -1) {
-                                                    location.city = result.long_name;
-                                                } else if (result.types.indexOf("route") !== -1) {
-                                                    location.street = result.long_name;
-                                                } else if (result.types.indexOf("street_number") !== -1) {
-                                                    location.houseNumber = parseInt(result.long_name);
-                                                }
-                                            });
-                                        })
-                                    }
-                                });
                                 $timeout( function (){
                                     latitudeSetter(scope, event.latLng.lat());
                                     longitudeSetter(scope, event.latLng.lng());
@@ -540,6 +551,8 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
                         });
                     }
                 }, true);
+
+
 
                 scope.$watch(attrs.triggerResize, function (newVal) {
                     if (newVal) {
@@ -592,7 +605,7 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
                                                     position: coords,
                                                     map: map
                                                 });
-                                                if (attrs.icon) {
+                                                if(attrs.icon) {
                                                     marker.setIcon(attrs.icon);
                                                 }
                                             } else {
