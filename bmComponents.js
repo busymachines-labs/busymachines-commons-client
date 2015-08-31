@@ -476,7 +476,7 @@ angular.module("bmComponents", []);;angular.module("bmComponents").directive("bm
                     google.maps.event.removeListener(addMarkerHandler);
                 }
 
-                scope.$watch("visible", function (value) {
+                scope.$watch(attrs.visible, function (value) {
                     if (value) {
                         $timeout(function () {
                             google.maps.event.trigger(map, "resize");
