@@ -16,14 +16,52 @@ angular.module("bmComponents").directive("bmSimpleMap", ["$timeout", "$parse", "
                     marker,
                     timeoutPromise;
 
+
+                function setCoords(LatLon) {
+                    var latitudeSetter = $parse(attrs.latitude).assign;
+                    var longitudeSetter = $parse(attrs.longitude).assign;
+                    if(LatLon) {
+                        latitudeSetter(scope, LatLon.lat());
+                        longitudeSetter(scope, LatLon.lng());
+                    } else {
+                        google.maps.event.addListener(marker, 'dragend', function(event) {
+                            var geocoder = new google.maps.Geocoder();
+                            $timeout( function (){
+                                latitudeSetter(scope, event.latLng.lat());
+                                longitudeSetter(scope, event.latLng.lng());
+                            });
+                        });
+                    }
+                }
+
                 scope.$watch(attrs.visible, function (value) {
                     if (value) {
-                        $timeout(function () {
-                            google.maps.event.trigger(map, "resize");
-                            if (coords) {
-                                map.setCenter(coords);
-                            }
-                        });
+                        google.maps.event.trigger(map, "resize");
+                        console.log(coords);
+                        if (coords) {
+                            map.setCenter(coords);
+                        } else {
+                            var  geocoder = new google.maps.Geocoder();
+                            var geolocationData = $parse(attrs.geolocationData)(scope);
+                            console.log(geolocationData);
+                            var addressObj = {
+                                address : (geolocationData.city ? geolocationData.city : "") + " " +(geolocationData.countryISO2 ? geolocationData.countryISO2 : "")
+                            };
+
+                            geocoder.geocode(addressObj, function (results, status) {
+                                    if (status == google.maps.GeocoderStatus.OK) {
+                                        if(results.length) {
+                                            var lat = results[0].geometry.location.lat();
+                                            var lng = results[0].geometry.location.lng();
+                                            map.setCenter(new google.maps.LatLng(lat, lng));
+                                            map.setZoom(10);
+                                        }
+                                    } else {
+                                        map.setZoom(2);
+                                    }
+                                }
+                            );
+                        }
                     }
                 });
 
@@ -39,6 +77,22 @@ angular.module("bmComponents").directive("bmSimpleMap", ["$timeout", "$parse", "
                     }
                 });
 
+
+                scope.$watch(attrs.addMarker, function (noMarker) {
+                    if (noMarker) {
+                        var centerOfMap = map.getCenter();
+                        marker = new google.maps.Marker({
+                            position: centerOfMap,
+                            map: map,
+                        });
+                        if(attrs.icon) {
+                            marker.setIcon(attrs.icon);
+                        }
+                        marker.setDraggable(true);
+                        setCoords(centerOfMap);
+                    }
+                });
+
                 scope.$watch(attrs.draggable, function (newVal) {
                     if (marker) {
                         if (newVal == true) {
@@ -46,34 +100,7 @@ angular.module("bmComponents").directive("bmSimpleMap", ["$timeout", "$parse", "
                         } else {
                             marker.setDraggable(false);
                         }
-                    } else {
-                        if (newVal == true) {
-                            var latitudeSetter = $parse(attrs.latitude).assign;
-                            var longitudeSetter = $parse(attrs.longitude).assign;
-                            var defaultLat = 52.402419, defaultLng = 4.921446;
-                            marker = new google.maps.Marker({
-                                position: {lat: defaultLat, lng: defaultLng},
-                                map: map
-                            });
 
-                            latitudeSetter(scope, defaultLat);
-                            longitudeSetter(scope, defaultLng);
-
-                            if (newVal == true) {
-                                marker.setDraggable(true);
-                            } else {
-                                marker.setDraggable(false);
-                            }
-                            google.maps.event.addListener(marker, 'dragend', function (event) {
-
-                                var geocoder = new google.maps.Geocoder();
-                                $timeout(function () {
-                                    latitudeSetter(scope, event.latLng.lat());
-                                    longitudeSetter(scope, event.latLng.lng());
-                                });
-
-                            });
-                        }
                     }
                 });
                 scope.$watch(attrs.mapMarker, function (markerData) {
@@ -87,21 +114,12 @@ angular.module("bmComponents").directive("bmSimpleMap", ["$timeout", "$parse", "
                             if(attrs.icon) {
                                 marker.setIcon(attrs.icon);
                             }
-                            google.maps.event.addListener(marker, 'dragend', function(event) {
-                                var latitudeSetter = $parse(attrs.latitude).assign;
-                                var longitudeSetter = $parse(attrs.longitude).assign;
-                                var geocoder = new google.maps.Geocoder();
-                                $timeout( function (){
-                                    latitudeSetter(scope, event.latLng.lat());
-                                    longitudeSetter(scope, event.latLng.lng());
 
-                                });
-
-                            });
                         } else {
                             marker.setPosition(coords);
                         }
 
+                        setCoords();
 
                         $timeout(function () {
                             google.maps.event.trigger(map, "resize");
